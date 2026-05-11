@@ -48,7 +48,7 @@ object FiberRuntimeSpec extends ZIOBaseSpec {
           val nOps       = new AtomicInteger(0)
           val latch      = Promise.unsafe.make[Nothing, Unit](FiberId.None)
           val supervisor = new YieldTrackingSupervisor(latch, nOps)
-          val f =
+          val f          =
             ZIO.whileLoop(nOps.getAndIncrement() < nIters)(ZIO.when(nOps.get() % 10000 == 0)(ZIO.yieldNow))(_ => ())
           ZIO
             .withFiberRuntime[Any, Nothing, Unit] { (parentFib, status) =>
