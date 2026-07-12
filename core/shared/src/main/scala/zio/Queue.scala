@@ -308,7 +308,7 @@ object Queue extends QueuePlatformSpecific {
         else {
           queue.poll(null.asInstanceOf[A]) match {
             case null => Exit.none
-            case v =>
+            case v    =>
               strategy.unsafeOnQueueEmptySpace(queue, takers)
               Exit.succeed(Some(v))
           }
