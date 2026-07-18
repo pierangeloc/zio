@@ -62,7 +62,9 @@ abstract class ZIOSpecAbstract extends ZIOApp with ZIOSpecAbstractVersionSpecifi
         Chunk.empty
     }
 
-  protected final def runSpec(implicit trace: Trace): ZIO[
+  protected final def runSpec(implicit
+    trace: Trace
+  ): ZIO[
     Environment with TestEnvironment with ZIOAppArgs with Scope,
     Throwable,
     Summary
@@ -72,7 +74,7 @@ abstract class ZIOSpecAbstract extends ZIOApp with ZIOSpecAbstractVersionSpecifi
       console <- ZIO.console
       testArgs = TestArgs.parse(args.getArgs.toArray)
       summary <- runSpecAsApp(spec, testArgs, console)
-      _ <- ZIO.when(testArgs.printSummary) {
+      _       <- ZIO.when(testArgs.printSummary) {
              console.printLine(testArgs.testRenderer.renderSummary(summary)).orDie
            }
       _ <- ZIO
@@ -106,12 +108,12 @@ abstract class ZIOSpecAbstract extends ZIOApp with ZIOSpecAbstractVersionSpecifi
         ]
 
       scopeEnv: ZEnvironment[Scope] = runtime.environment
-      perTestLayer = (ZLayer.succeedEnvironment(scopeEnv) ++ liveEnvironment) >>>
+      perTestLayer                  = (ZLayer.succeedEnvironment(scopeEnv) ++ liveEnvironment) >>>
                        (TestEnvironment.live ++ ZLayer.environment[Scope])
 
       executionEventSinkLayer = ExecutionEventSink.live(console, testArgs.testEventRenderer)
       environment            <- ZIO.environment[Environment]
-      runner =
+      runner                  =
         TestRunner(
           TestExecutor
             .default[Environment, Any](
@@ -122,7 +124,7 @@ abstract class ZIOSpecAbstract extends ZIOApp with ZIOSpecAbstractVersionSpecifi
             )
         )
       randomId <- ZIO.withRandom(Random.RandomLive)(Random.nextInt).map("test_case_" + _)
-      summary <-
+      summary  <-
         runner.run(randomId, aspects.foldLeft(filteredSpec)(_ @@ _) @@ TestAspect.fibers)
     } yield summary
   }

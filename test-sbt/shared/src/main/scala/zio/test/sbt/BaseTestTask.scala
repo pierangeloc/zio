@@ -70,7 +70,7 @@ abstract class BaseTestTask[T](
             .selectors()
             .forall(selector => selector.isInstanceOf[TestSelector] || selector.isInstanceOf[TestWildcardSelector]) =>
         val prefix = s"$label - "
-        val terms = td.selectors().toList.collect {
+        val terms  = td.selectors().toList.collect {
           case ts: TestSelector          => ts.testName().stripPrefix(prefix)
           case tws: TestWildcardSelector => tws.testWildcard().stripPrefix(prefix)
         }
