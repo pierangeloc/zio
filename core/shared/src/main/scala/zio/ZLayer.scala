@@ -306,7 +306,7 @@ sealed abstract class ZLayer[-RIn, +E, +ROut] extends ZLayerVersionSpecific[RIn,
         ZLayer.fromZIO {
           Clock.currentDateTime.flatMap { now =>
             schedule.step(now, e, s).flatMap {
-              case (_, _, Done) => ZIO.fail(e)
+              case (_, _, Done)                   => ZIO.fail(e)
               case (state, _, Continue(interval)) =>
                 Clock.sleep(Duration.fromInterval(now, interval.start)).as(State(state))
             }
@@ -945,8 +945,9 @@ object ZLayer extends ZLayerCompanionVersionSpecific {
      * Returns a layer that produces a reloadable version of this service, where
      * the reloading schedule is derived from the layer input.
      */
-    def reloadableAutoFromConfig[RIn2](scheduleFromConfig: ZEnvironment[RIn2] => Schedule[RIn with RIn2, Any, Any])(
-      implicit
+    def reloadableAutoFromConfig[RIn2](
+      scheduleFromConfig: ZEnvironment[RIn2] => Schedule[RIn with RIn2, Any, Any]
+    )(implicit
       tagOut: Tag[ROut],
       trace: Trace
     ): ZLayer[RIn with RIn2, E, Reloadable[ROut]] =
@@ -1352,7 +1353,9 @@ object ZLayer extends ZLayerCompanionVersionSpecific {
           Nothing,
           O
         ]
-        def apply(f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N) => O)(implicit trace: Trace): ZLayer[
+        def apply(f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N) => O)(implicit
+          trace: Trace
+        ): ZLayer[
           A with B with C with D with E with F with G with H with I with J with K with L with M with N,
           Nothing,
           O
@@ -1411,7 +1414,9 @@ object ZLayer extends ZLayerCompanionVersionSpecific {
           Nothing,
           P
         ]
-        def apply(f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O) => P)(implicit trace: Trace): ZLayer[
+        def apply(f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O) => P)(implicit
+          trace: Trace
+        ): ZLayer[
           A with B with C with D with E with F with G with H with I with J with K with L with M with N with O,
           Nothing,
           P
@@ -1472,7 +1477,9 @@ object ZLayer extends ZLayerCompanionVersionSpecific {
           Nothing,
           Q
         ]
-        def apply(f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P) => Q)(implicit trace: Trace): ZLayer[
+        def apply(f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P) => Q)(implicit
+          trace: Trace
+        ): ZLayer[
           A with B with C with D with E with F with G with H with I with J with K with L with M with N with O with P,
           Nothing,
           Q
@@ -1550,7 +1557,9 @@ object ZLayer extends ZLayerCompanionVersionSpecific {
           Nothing,
           R
         ]
-        def apply(f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q) => R)(implicit trace: Trace): ZLayer[
+        def apply(f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q) => R)(implicit
+          trace: Trace
+        ): ZLayer[
           A with B
             with C
             with D
@@ -1679,7 +1688,9 @@ object ZLayer extends ZLayerCompanionVersionSpecific {
         ]
         def apply(
           f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R) => S
-        )(implicit trace: Trace): ZLayer[
+        )(implicit
+          trace: Trace
+        ): ZLayer[
           A with B
             with C
             with D
@@ -1817,7 +1828,9 @@ object ZLayer extends ZLayerCompanionVersionSpecific {
         ]
         def apply(
           f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S) => T
-        )(implicit trace: Trace): ZLayer[
+        )(implicit
+          trace: Trace
+        ): ZLayer[
           A with B
             with C
             with D
@@ -1961,7 +1974,9 @@ object ZLayer extends ZLayerCompanionVersionSpecific {
         ]
         def apply(
           f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T) => U
-        )(implicit trace: Trace): ZLayer[
+        )(implicit
+          trace: Trace
+        ): ZLayer[
           A with B
             with C
             with D
@@ -2111,7 +2126,9 @@ object ZLayer extends ZLayerCompanionVersionSpecific {
         ]
         def apply(
           f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U) => V
-        )(implicit trace: Trace): ZLayer[
+        )(implicit
+          trace: Trace
+        ): ZLayer[
           A with B
             with C
             with D
@@ -2267,7 +2284,9 @@ object ZLayer extends ZLayerCompanionVersionSpecific {
         ]
         def apply(
           f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V) => W
-        )(implicit trace: Trace): ZLayer[
+        )(implicit
+          trace: Trace
+        ): ZLayer[
           A with B
             with C
             with D
@@ -2396,7 +2415,7 @@ object ZLayer extends ZLayerCompanionVersionSpecific {
                                      a          <- ZIO.environment[A]
                                      outerScope  = scope
                                      innerScope <- Scope.make
-                                     tp <-
+                                     tp         <-
                                        restore(
                                          layer
                                            .scope(innerScope)
@@ -2413,7 +2432,7 @@ object ZLayer extends ZLayerCompanionVersionSpecific {
                                                       innerScope.close(e)
                                                     )
                                                   }
-                                             _ <- observers.update(_ + 1)
+                                             _              <- observers.update(_ + 1)
                                              outerFinalizer <-
                                                outerScope.addFinalizerExit(e => finalizerRef.get.flatMap(_.apply(e)))
                                              _ <- promise.succeed((patch, b))
