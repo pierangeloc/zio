@@ -39,9 +39,9 @@ object TerminalRendering {
     println(toplevel.mkString("\n"))
     println(transitive.mkString("\n"))
 
-    var index   = 0
-    def next    = { index += 1; index }
-    var indices = Map.empty[String, String]
+    var index             = 0
+    def next              = { index += 1; index }
+    var indices           = Map.empty[String, String]
     def id(layer: String) = indices.getOrElse(
       layer, {
         val i = s"$next.".faint
@@ -106,7 +106,7 @@ object TerminalRendering {
 
   def missingLayersCustomError(value: Set[String], effectType: String, titleString: String): String = {
 
-    val missingLayers = value.toList.map(_.magenta.bold)
+    val missingLayers       = value.toList.map(_.magenta.bold)
     val missingLayersString = missingLayers.zipWithIndex.map { case (layer, index) =>
       val i = s"${index + 1}.".faint
       s"$i $layer"
