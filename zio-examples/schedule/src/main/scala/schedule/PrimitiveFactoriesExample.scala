@@ -3,8 +3,8 @@ package schedule
 import zio._
 
 /**
- * Tutorial: Schedule Step by Step — Retry and Repeat Policies in ZIO
- * Concept: Primitive factory methods — recurs, spaced, exponential, fixed, forever
+ * Tutorial: Schedule Step by Step — Retry and Repeat Policies in ZIO Concept:
+ * Primitive factory methods — recurs, spaced, exponential, fixed, forever
  *
  * The Schedule companion object provides ready-made schedules for the most
  * common policies. This example uses `schedule.run` to inspect what each

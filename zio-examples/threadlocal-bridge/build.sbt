@@ -1,4 +1,4 @@
-scalaVersion := "2.13.18"
+scalaVersion   := "2.13.18"
 publish / skip := true
 
 libraryDependencies ++= Seq(

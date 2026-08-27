@@ -3,12 +3,13 @@ package schedule
 import zio._
 
 /**
- * Tutorial: Schedule Step by Step — Retry and Repeat Policies in ZIO
- * Concept: Putting It All Together — realistic HTTP retry policy
+ * Tutorial: Schedule Step by Step — Retry and Repeat Policies in ZIO Concept:
+ * Putting It All Together — realistic HTTP retry policy
  *
  * Combines exponential backoff with a hard retry cap using `&&`, logs each
  * failure with `tapError`, and handles eventual exhaustion with `catchAll`.
- * Also demonstrates adding jitter to reduce retry storms in distributed systems.
+ * Also demonstrates adding jitter to reduce retry storms in distributed
+ * systems.
  *
  * sbt "runMain schedule.CompleteExample"
  */
@@ -39,7 +40,7 @@ object CompleteExample extends App {
       _ <- Console.printLine(s"Final result: $result").orDie
 
       // Demonstrate exhaustion: always-failing effect hits the retry cap
-      _ <- Console.printLine("\n=== Retry exhaustion demo ===").orDie
+      _              <- Console.printLine("\n=== Retry exhaustion demo ===").orDie
       exhaustCounter <- Ref.make(0)
       exhaustResult <- httpRequest(exhaustCounter) // won't succeed — reset to >5 initial failures
                          .tapError(err => Console.printLine(s"  Attempt failed: $err").orDie)
@@ -48,7 +49,7 @@ object CompleteExample extends App {
       _ <- Console.printLine(s"Exhaustion result: $exhaustResult").orDie
 
       // Jitter variant: each delay is scaled by a random 0.8-1.2 factor
-      _ <- Console.printLine("\n=== Jittered policy (verify via schedule.run) ===").orDie
+      _   <- Console.printLine("\n=== Jittered policy (verify via schedule.run) ===").orDie
       now <- Clock.currentDateTime
       jitteredDelays <- (Schedule.exponential(100.millis).jittered && Schedule.recurs(3))
                           .run(now, List.fill(4)(()))

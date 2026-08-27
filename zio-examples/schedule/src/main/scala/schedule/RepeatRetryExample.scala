@@ -3,12 +3,12 @@ package schedule
 import zio._
 
 /**
- * Tutorial: Schedule Step by Step — Retry and Repeat Policies in ZIO
- * Concept: Using a Schedule with repeat and retry
+ * Tutorial: Schedule Step by Step — Retry and Repeat Policies in ZIO Concept:
+ * Using a Schedule with repeat and retry
  *
- * Demonstrates how to plug a Schedule into ZIO#repeat and ZIO#retry.
- * `repeat` runs an effect repeatedly as long as the schedule says Continue;
- * `retry` reruns a failing effect as long as the schedule says Continue.
+ * Demonstrates how to plug a Schedule into ZIO#repeat and ZIO#retry. `repeat`
+ * runs an effect repeatedly as long as the schedule says Continue; `retry`
+ * reruns a failing effect as long as the schedule says Continue.
  *
  * sbt "runMain schedule.RepeatRetryExample"
  */
@@ -37,7 +37,7 @@ object RepeatRetryExample extends App {
 
   val retryDemo: ZIO[Any, Nothing, Unit] =
     for {
-      ref    <- Ref.make(0)
+      ref <- Ref.make(0)
       result <- alwaysFail(ref)
                   .retry(Schedule.once) // allow exactly 1 retry → 2 total attempts
                   .catchAll(err => ZIO.succeed(err))

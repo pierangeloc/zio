@@ -3,8 +3,8 @@ package schedule
 import zio._
 
 /**
- * Tutorial: Schedule Step by Step — Retry and Repeat Policies in ZIO
- * Concept: Transforming schedule output with map, as, and collectAll
+ * Tutorial: Schedule Step by Step — Retry and Repeat Policies in ZIO Concept:
+ * Transforming schedule output with map, as, and collectAll
  *
  * `map` applies a function to every output value without changing when the
  * schedule continues. `as` replaces every output with a constant. `collectAll`

@@ -2,13 +2,15 @@ package differcompositionalupdates
 
 import zio._
 
-/** Title: The Differ Data Type — Compositional FiberRef Updates End-to-End
-  * Description: A comprehensive example showing how Differ[Value, Patch] enables
-  * concurrent fiber updates to a FiberRef to be merged faithfully rather than
-  * overwritten. Covers a custom Differ, built-in Differs (set, map), composed
-  * Differs (zip), and the internal ZEnvironment Differ used by ZIO itself.
-  * Run: sbt "differ-compositional-updates/runMain differcompositionalupdates.CompleteExample"
-  */
+/**
+ * Title: The Differ Data Type — Compositional FiberRef Updates End-to-End
+ * Description: A comprehensive example showing how Differ[Value, Patch] enables
+ * concurrent fiber updates to a FiberRef to be merged faithfully rather than
+ * overwritten. Covers a custom Differ, built-in Differs (set, map), composed
+ * Differs (zip), and the internal ZEnvironment Differ used by ZIO itself. Run:
+ * sbt "differ-compositional-updates/runMain
+ * differcompositionalupdates.CompleteExample"
+ */
 object CompleteExample extends ZIOAppDefault {
 
   // ===== Custom Differ: additive numeric deltas =====
@@ -27,8 +29,8 @@ object CompleteExample extends ZIOAppDefault {
     for {
       _      <- Console.printLine("[addDiffer] Starting concurrent fiber updates...").orDie
       ref    <- FiberRef.makePatch(0, addDiffer, 0)
-      left   <- ref.update(_ + 10).fork   // fiber 1 contributes delta +10
-      right  <- ref.update(_ + 5).fork    // fiber 2 contributes delta +5
+      left   <- ref.update(_ + 10).fork // fiber 1 contributes delta +10
+      right  <- ref.update(_ + 5).fork  // fiber 2 contributes delta +5
       _      <- left.join
       _      <- right.join
       result <- ref.get
@@ -75,8 +77,8 @@ object CompleteExample extends ZIOAppDefault {
       _      <- Console.printLine("[zip (<*>)] Starting concurrent fiber updates...").orDie
       differ  = Differ.set[String] <*> Differ.update[Int]
       ref    <- FiberRef.makePatch((Set.empty[String], 0), differ)
-      left   <- ref.update { case (s, n) => (s + "tag", n) }.fork   // adds "tag" to set
-      right  <- ref.update { case (s, n) => (s, 99) }.fork          // sets int to 99
+      left   <- ref.update { case (s, n) => (s + "tag", n) }.fork // adds "tag" to set
+      right  <- ref.update { case (s, n) => (s, 99) }.fork        // sets int to 99
       _      <- left.join
       _      <- right.join
       result <- ref.get
@@ -96,15 +98,15 @@ object CompleteExample extends ZIOAppDefault {
     // ZEnvironment.apply[A, B] creates ZEnvironment[A with B] — correctly typed
     val initial = ZEnvironment(ServiceA("default"), ServiceB(0))
     for {
-      _      <- Console.printLine("[ZEnvironment] Starting concurrent fiber updates...").orDie
-      ref    <- FiberRef.makeEnvironment[ServiceA with ServiceB](initial)
-      left   <- ref.update(_.add(ServiceA("auth"))).fork
-      right  <- ref.update(_.add(ServiceB(8080))).fork
-      _      <- left.join
-      _      <- right.join
-      env    <- ref.get
-      _      <- Console.printLine(s"[ZEnvironment] ServiceA: ${env.get[ServiceA].name}").orDie
-      _      <- Console.printLine(s"[ZEnvironment] ServiceB port: ${env.get[ServiceB].port}").orDie
+      _     <- Console.printLine("[ZEnvironment] Starting concurrent fiber updates...").orDie
+      ref   <- FiberRef.makeEnvironment[ServiceA with ServiceB](initial)
+      left  <- ref.update(_.add(ServiceA("auth"))).fork
+      right <- ref.update(_.add(ServiceB(8080))).fork
+      _     <- left.join
+      _     <- right.join
+      env   <- ref.get
+      _     <- Console.printLine(s"[ZEnvironment] ServiceA: ${env.get[ServiceA].name}").orDie
+      _     <- Console.printLine(s"[ZEnvironment] ServiceB port: ${env.get[ServiceB].port}").orDie
     } yield ()
   }
 

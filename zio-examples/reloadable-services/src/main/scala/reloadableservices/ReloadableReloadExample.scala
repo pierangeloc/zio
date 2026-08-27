@@ -18,19 +18,20 @@ package reloadableservices
 
 import zio._
 
-/** Tutorial: Hot-Swapping Services with Reloadable
-  *
-  * Concept: Explicit Hot-Swap — `Reloadable.reload`
-  *
-  * Demonstrates an atomic hot-swap of a running service: the old resource
-  * scope is closed (finalizers run), then a brand-new instance is acquired,
-  * all in one uninterruptible step.
-  *
-  * Run:
-  * {{{
-  *   sbt "examplesJVM/runMain zio.examples.ReloadableReloadExample"
-  * }}}
-  */
+/**
+ * Tutorial: Hot-Swapping Services with Reloadable
+ *
+ * Concept: Explicit Hot-Swap — `Reloadable.reload`
+ *
+ * Demonstrates an atomic hot-swap of a running service: the old resource scope
+ * is closed (finalizers run), then a brand-new instance is acquired, all in one
+ * uninterruptible step.
+ *
+ * Run:
+ * {{{
+ *   sbt "examplesJVM/runMain zio.examples.ReloadableReloadExample"
+ * }}}
+ */
 object ReloadableReloadExample extends ZIOAppDefault {
 
   trait Counter {

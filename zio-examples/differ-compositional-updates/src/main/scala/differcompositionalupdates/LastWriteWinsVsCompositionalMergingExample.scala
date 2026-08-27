@@ -2,12 +2,14 @@ package differcompositionalupdates
 
 import zio._
 
-/** Title: Last-Write-Wins vs. Compositional Merging
-  * Description: Demonstrates that Differ.update (last-write-wins) loses one fiber's update
-  * when two fibers concurrently modify a FiberRef, then contrasts it with a custom addDiffer
-  * that merges both changes faithfully.
-  * Run: sbt "differ-compositional-updates/runMain differcompositionalupdates.LastWriteWinsVsCompositionalMergingExample"
-  */
+/**
+ * Title: Last-Write-Wins vs. Compositional Merging Description: Demonstrates
+ * that Differ.update (last-write-wins) loses one fiber's update when two fibers
+ * concurrently modify a FiberRef, then contrasts it with a custom addDiffer
+ * that merges both changes faithfully. Run: sbt
+ * "differ-compositional-updates/runMain
+ * differcompositionalupdates.LastWriteWinsVsCompositionalMergingExample"
+ */
 object LastWriteWinsVsCompositionalMergingExample extends ZIOAppDefault {
 
   // A custom Differ that records numeric deltas: diff = subtraction, patch = addition.
@@ -27,8 +29,8 @@ object LastWriteWinsVsCompositionalMergingExample extends ZIOAppDefault {
     for {
       _      <- Console.printLine("--- Differ.update (last-write-wins) ---").orDie
       ref    <- FiberRef.makePatch(0, Differ.update[Int])
-      left   <- ref.update(_ + 10).fork  // wants to add 10
-      right  <- ref.update(_ + 5).fork   // wants to add 5
+      left   <- ref.update(_ + 10).fork // wants to add 10
+      right  <- ref.update(_ + 5).fork  // wants to add 5
       _      <- left.join
       _      <- right.join
       result <- ref.get
@@ -42,9 +44,9 @@ object LastWriteWinsVsCompositionalMergingExample extends ZIOAppDefault {
   val compositionalMergeDemo: ZIO[Any, Nothing, Unit] = ZIO.scoped {
     for {
       _      <- Console.printLine("--- addDiffer (compositional merge) ---").orDie
-      ref    <- FiberRef.makePatch(0, addDiffer, 0)  // initial = 0, fork patch = 0
-      left   <- ref.update(_ + 10).fork              // fiber 1 adds 10 → delta 10
-      right  <- ref.update(_ + 5).fork               // fiber 2 adds 5  → delta 5
+      ref    <- FiberRef.makePatch(0, addDiffer, 0) // initial = 0, fork patch = 0
+      left   <- ref.update(_ + 10).fork             // fiber 1 adds 10 → delta 10
+      right  <- ref.update(_ + 5).fork              // fiber 2 adds 5  → delta 5
       _      <- left.join
       _      <- right.join
       result <- ref.get
