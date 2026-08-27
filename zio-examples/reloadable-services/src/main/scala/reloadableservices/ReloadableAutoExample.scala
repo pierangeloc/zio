@@ -18,18 +18,19 @@ package reloadableservices
 
 import zio._
 
-/** Tutorial: Hot-Swapping Services with Reloadable
-  *
-  * Concept: Automatic Scheduled Reloads — `Reloadable.auto`
-  *
-  * Shows how `Reloadable.auto` drives periodic hot-swaps with a Schedule,
-  * managing the background daemon fiber's lifecycle automatically.
-  *
-  * Run:
-  * {{{
-  *   sbt "examplesJVM/runMain zio.examples.ReloadableAutoExample"
-  * }}}
-  */
+/**
+ * Tutorial: Hot-Swapping Services with Reloadable
+ *
+ * Concept: Automatic Scheduled Reloads — `Reloadable.auto`
+ *
+ * Shows how `Reloadable.auto` drives periodic hot-swaps with a Schedule,
+ * managing the background daemon fiber's lifecycle automatically.
+ *
+ * Run:
+ * {{{
+ *   sbt "examplesJVM/runMain zio.examples.ReloadableAutoExample"
+ * }}}
+ */
 object ReloadableAutoExample extends ZIOAppDefault {
 
   trait Counter {
@@ -49,9 +50,10 @@ object ReloadableAutoExample extends ZIOAppDefault {
     } yield counter
   }
 
-  /** The service is rebuilt automatically every 2 seconds by a daemon fiber
-    * managed inside the layer's scope.
-    */
+  /**
+   * The service is rebuilt automatically every 2 seconds by a daemon fiber
+   * managed inside the layer's scope.
+   */
   val autoLayer: ZLayer[Any, Nothing, Reloadable[Counter]] =
     Reloadable.auto(counterLayer, Schedule.fixed(2.seconds))
 

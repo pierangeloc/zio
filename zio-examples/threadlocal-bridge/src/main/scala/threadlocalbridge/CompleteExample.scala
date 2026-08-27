@@ -2,12 +2,13 @@ package threadlocalbridge
 
 import zio._
 
-/** Title: Complete ThreadLocalBridge Example - Request Context Propagation
-  * Description: A realistic end-to-end example showing how to use ThreadLocalBridge
-  * to manage request context (request ID, user, correlation ID) across multiple
-  * async operations, including database queries and logging.
-  * Run: sbt "threadlocal-bridge/runMain threadlocalbridge.CompleteExample"
-  */
+/**
+ * Title: Complete ThreadLocalBridge Example - Request Context Propagation
+ * Description: A realistic end-to-end example showing how to use
+ * ThreadLocalBridge to manage request context (request ID, user, correlation
+ * ID) across multiple async operations, including database queries and logging.
+ * Run: sbt "threadlocal-bridge/runMain threadlocalbridge.CompleteExample"
+ */
 object CompleteExample extends ZIOAppDefault {
 
   // ===== Request Context Model =====
@@ -77,23 +78,25 @@ object CompleteExample extends ZIOAppDefault {
         _ <- logEvent("Request started")
 
         // Parallel operations: database queries and API calls
-        _ <- ZIO.collectAllPar(
-          List(
-            queryDatabase("SELECT user_profile FROM users")
-              .flatMap(result => logEvent(s"Profile loaded: $result")),
-            callExternalApi("/api/user/permissions")
-              .flatMap(result => logEvent(s"Permissions fetched: $result")),
-            queryDatabase("SELECT orders FROM order_history")
-          )
-        ).unit
+        _ <- ZIO
+               .collectAllPar(
+                 List(
+                   queryDatabase("SELECT user_profile FROM users")
+                     .flatMap(result => logEvent(s"Profile loaded: $result")),
+                   callExternalApi("/api/user/permissions")
+                     .flatMap(result => logEvent(s"Permissions fetched: $result")),
+                   queryDatabase("SELECT orders FROM order_history")
+                 )
+               )
+               .unit
 
         // Sequential operations that depend on context
         _ <- for {
-          _ <- logEvent("Processing order details")
-          _ <- callExternalApi("/api/inventory/check")
-          _ <- queryDatabase("UPDATE user_last_seen")
-          _ <- logEvent("Request completed")
-        } yield ()
+               _ <- logEvent("Processing order details")
+               _ <- callExternalApi("/api/inventory/check")
+               _ <- queryDatabase("UPDATE user_last_seen")
+               _ <- logEvent("Request completed")
+             } yield ()
       } yield ()
     }
   }
@@ -124,8 +127,8 @@ object CompleteExample extends ZIOAppDefault {
     // Create FiberRef linked to ThreadLocal
     for {
       contextRef <- ThreadLocalBridge.makeFiberRef(
-        RequestContext("default", "default", "default")
-      )(ctx => requestContextThreadLocal.set(ctx))
+                      RequestContext("default", "default", "default")
+                    )(ctx => requestContextThreadLocal.set(ctx))
 
       // Process multiple requests concurrently
       // Each request uses locally() to scope its context
@@ -141,27 +144,28 @@ object CompleteExample extends ZIOAppDefault {
     val ctx2 = RequestContext("req-iso-002", "user-y", "corr-iso-2")
 
     for {
-      contextRef <- ThreadLocalBridge.makeFiberRef(ctx1)(
-        ctx => requestContextThreadLocal.set(ctx)
-      )
+      contextRef <- ThreadLocalBridge.makeFiberRef(ctx1)(ctx => requestContextThreadLocal.set(ctx))
 
       _ <- ZIO.succeed {
-        println(s"Main: Set context to ${ctx1.userId}")
-        println(s"Main: Current context = ${requestContextThreadLocal.get()}")
-      }
+             println(s"Main: Set context to ${ctx1.userId}")
+             println(s"Main: Current context = ${requestContextThreadLocal.get()}")
+           }
 
       // Child fiber uses locally() to scope a different context
-      _ <- contextRef.locally(ctx2) {
-        ZIO.succeed {
-          println(s"Child: Modified context to ${ctx2.userId}")
-          println(s"Child: Current context = ${requestContextThreadLocal.get()}")
-        }
-      }.fork.flatMap(_.join)
+      _ <- contextRef
+             .locally(ctx2) {
+               ZIO.succeed {
+                 println(s"Child: Modified context to ${ctx2.userId}")
+                 println(s"Child: Current context = ${requestContextThreadLocal.get()}")
+               }
+             }
+             .fork
+             .flatMap(_.join)
 
       // Main fiber's context is restored after child
       _ <- ZIO.succeed {
-        println(s"Main: After child, context still = ${requestContextThreadLocal.get()}")
-      }
+             println(s"Main: After child, context still = ${requestContextThreadLocal.get()}")
+           }
     } yield ()
   }
 

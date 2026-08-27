@@ -3,8 +3,8 @@ package schedule
 import zio._
 
 /**
- * Tutorial: Schedule Step by Step — Retry and Repeat Policies in ZIO
- * Concept: The step-function contract — initial, step, and Decision
+ * Tutorial: Schedule Step by Step — Retry and Repeat Policies in ZIO Concept:
+ * The step-function contract — initial, step, and Decision
  *
  * Every Schedule is a pure state machine: `initial` seeds the state and `step`
  * returns (newState, output, Decision). `Schedule.unfold` builds one from a
@@ -23,7 +23,7 @@ object StepContractExample extends App {
 
   val program: ZIO[Any, Nothing, Unit] =
     for {
-      now    <- Clock.currentDateTime
+      now <- Clock.currentDateTime
       // run simulates 5 steps without sleeping
       output <- doublingSchedule.run(now, List.fill(5)(()))
       _      <- Console.printLine(s"[unfold]    Doubling schedule outputs: $output").orDie

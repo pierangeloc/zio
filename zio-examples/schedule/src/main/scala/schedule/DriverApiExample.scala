@@ -3,8 +3,8 @@ package schedule
 import zio._
 
 /**
- * Tutorial: Schedule Step by Step — Retry and Repeat Policies in ZIO
- * Concept: Driving a schedule manually with the Driver API
+ * Tutorial: Schedule Step by Step — Retry and Repeat Policies in ZIO Concept:
+ * Driving a schedule manually with the Driver API
  *
  * Every Schedule can produce a Driver — a stateful, effectful runner that
  * exposes one step at a time. `driver.next(in)` advances one step and fails
@@ -38,9 +38,9 @@ object DriverApiExample extends App {
       _ <- driver
              .next(())
              .foldZIO(
-               _ => driver.last.orDie.flatMap(n =>
-                 Console.printLine(s"Done  → schedule exhausted; last output was $n").orDie
-               ),
+               _ =>
+                 driver.last.orDie
+                   .flatMap(n => Console.printLine(s"Done  → schedule exhausted; last output was $n").orDie),
                n => Console.printLine(s"Unexpected success: $n").orDie
              )
 

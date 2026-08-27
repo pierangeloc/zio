@@ -2,13 +2,16 @@ package differcompositionalupdates
 
 import zio._
 
-/** Title: How ZIO Uses Differ Internally — Environment, Loggers, RuntimeFlags
-  * Description: Shows that ZIO's own FiberRefs (currentEnvironment, currentLoggers,
-  * currentRuntimeFlags) are all backed by Differ, making withEnvironment and ZLayer
-  * compositional across concurrent fibers. Demonstrates via FiberRef.makeEnvironment
-  * that two concurrent fiber updates to a ZEnvironment are always merged.
-  * Run: sbt "differ-compositional-updates/runMain differcompositionalupdates.ZIOInternalDiffersExample"
-  */
+/**
+ * Title: How ZIO Uses Differ Internally — Environment, Loggers, RuntimeFlags
+ * Description: Shows that ZIO's own FiberRefs (currentEnvironment,
+ * currentLoggers, currentRuntimeFlags) are all backed by Differ, making
+ * withEnvironment and ZLayer compositional across concurrent fibers.
+ * Demonstrates via FiberRef.makeEnvironment that two concurrent fiber updates
+ * to a ZEnvironment are always merged. Run: sbt
+ * "differ-compositional-updates/runMain
+ * differcompositionalupdates.ZIOInternalDiffersExample"
+ */
 object ZIOInternalDiffersExample extends ZIOAppDefault {
 
   // Services for demonstration
@@ -22,15 +25,15 @@ object ZIOInternalDiffersExample extends ZIOAppDefault {
   val environmentMergeDemo: ZIO[Any, Nothing, Unit] = ZIO.scoped {
     val initial = ZEnvironment(ServiceA("default"), ServiceB(0))
     for {
-      _      <- Console.printLine("--- FiberRef.makeEnvironment: concurrent environment updates ---").orDie
-      ref    <- FiberRef.makeEnvironment[ServiceA with ServiceB](initial)
-      left   <- ref.update(_.add(ServiceA("hello"))).fork
-      right  <- ref.update(_.add(ServiceB(42))).fork
-      _      <- left.join
-      _      <- right.join
-      env    <- ref.get
-      _      <- Console.printLine(s"ServiceA present: ${env.get[ServiceA].value}").orDie
-      _      <- Console.printLine(s"ServiceB present: ${env.get[ServiceB].value}").orDie
+      _     <- Console.printLine("--- FiberRef.makeEnvironment: concurrent environment updates ---").orDie
+      ref   <- FiberRef.makeEnvironment[ServiceA with ServiceB](initial)
+      left  <- ref.update(_.add(ServiceA("hello"))).fork
+      right <- ref.update(_.add(ServiceB(42))).fork
+      _     <- left.join
+      _     <- right.join
+      env   <- ref.get
+      _     <- Console.printLine(s"ServiceA present: ${env.get[ServiceA].value}").orDie
+      _     <- Console.printLine(s"ServiceB present: ${env.get[ServiceB].value}").orDie
     } yield ()
   }
 

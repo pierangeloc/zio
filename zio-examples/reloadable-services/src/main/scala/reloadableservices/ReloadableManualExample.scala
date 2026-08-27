@@ -18,18 +18,19 @@ package reloadableservices
 
 import zio._
 
-/** Tutorial: Hot-Swapping Services with Reloadable
-  *
-  * Concept: Wrapping a Layer — `Reloadable.manual` and `Reloadable.get`
-  *
-  * Shows how to lift any resource-managed ZLayer into a Reloadable wrapper,
-  * then access the live service instance via `Reloadable.get[Counter]`.
-  *
-  * Run:
-  * {{{
-  *   sbt "examplesJVM/runMain zio.examples.ReloadableManualExample"
-  * }}}
-  */
+/**
+ * Tutorial: Hot-Swapping Services with Reloadable
+ *
+ * Concept: Wrapping a Layer — `Reloadable.manual` and `Reloadable.get`
+ *
+ * Shows how to lift any resource-managed ZLayer into a Reloadable wrapper, then
+ * access the live service instance via `Reloadable.get[Counter]`.
+ *
+ * Run:
+ * {{{
+ *   sbt "examplesJVM/runMain zio.examples.ReloadableManualExample"
+ * }}}
+ */
 object ReloadableManualExample extends ZIOAppDefault {
 
   /** The service interface used throughout this tutorial. */
@@ -38,9 +39,10 @@ object ReloadableManualExample extends ZIOAppDefault {
     def get: UIO[Int]
   }
 
-  /** A scoped layer that logs its own acquire and release events so the
-    * lifecycle is immediately visible in the console.
-    */
+  /**
+   * A scoped layer that logs its own acquire and release events so the
+   * lifecycle is immediately visible in the console.
+   */
   val counterLayer: ZLayer[Any, Nothing, Counter] = ZLayer.scoped {
     for {
       ref <- Ref.make(0)

@@ -2,12 +2,13 @@ package differcompositionalupdates
 
 import zio._
 
-/** Title: The Four Differ Laws — Verified by Hand
-  * Description: Manually verifies all four correctness laws for a custom addDiffer:
-  * associativity, identity, self-diff-is-empty, and round-trip. Violations would
-  * silently corrupt FiberRef state on join.
-  * Run: sbt "differ-compositional-updates/runMain differcompositionalupdates.DifferLawsVerificationExample"
-  */
+/**
+ * Title: The Four Differ Laws — Verified by Hand Description: Manually verifies
+ * all four correctness laws for a custom addDiffer: associativity, identity,
+ * self-diff-is-empty, and round-trip. Violations would silently corrupt
+ * FiberRef state on join. Run: sbt "differ-compositional-updates/runMain
+ * differcompositionalupdates.DifferLawsVerificationExample"
+ */
 object DifferLawsVerificationExample extends ZIOAppDefault {
 
   val addDiffer: Differ[Int, Int] = new Differ[Int, Int] {
@@ -18,12 +19,12 @@ object DifferLawsVerificationExample extends ZIOAppDefault {
   }
 
   def checkLaw(name: String, holds: Boolean): ZIO[Any, Nothing, Unit] =
-    Console.printLine(s"  [${ if (holds) "PASS" else "FAIL" }] $name").orDie
+    Console.printLine(s"  [${if (holds) "PASS" else "FAIL"}] $name").orDie
 
   override def run: ZIO[Any, Any, Unit] = {
-    val p1 = addDiffer.diff(0, 3)    // delta = 3
-    val p2 = addDiffer.diff(3, 7)    // delta = 4
-    val p3 = addDiffer.diff(7, 12)   // delta = 5
+    val p1 = addDiffer.diff(0, 3)  // delta = 3
+    val p2 = addDiffer.diff(3, 7)  // delta = 4
+    val p3 = addDiffer.diff(7, 12) // delta = 5
 
     for {
       _ <- Console.printLine("=== Concept 4: The Four Differ Laws ===").orDie

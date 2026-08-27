@@ -3,12 +3,13 @@ package schedule
 import zio._
 
 /**
- * Tutorial: Schedule Step by Step — Retry and Repeat Policies in ZIO
- * Concept: Composing two schedules with &&, ||, and ++
+ * Tutorial: Schedule Step by Step — Retry and Repeat Policies in ZIO Concept:
+ * Composing two schedules with &&, ||, and ++
  *
  * `&&` (intersection): both must say Continue; takes the later interval; output
- * is a tuple. `||` (union): either can say Continue; takes the earlier interval.
- * `++` (andThen): runs first schedule to Done, then hands off to the second.
+ * is a tuple. `||` (union): either can say Continue; takes the earlier
+ * interval. `++` (andThen): runs first schedule to Done, then hands off to the
+ * second.
  *
  * sbt "runMain schedule.CompositionExample"
  */
@@ -34,23 +35,25 @@ object CompositionExample extends App {
 
       // && demo
       andAndOut <- cappedBackoff.run(now, 1 to 10)
-      _ <- Console.printLine("[&&] Exponential capped at recurs(2):").orDie
+      _         <- Console.printLine("[&&] Exponential capped at recurs(2):").orDie
       _ <- ZIO.foreach(andAndOut) { case (d, n) =>
              Console.printLine(s"  step $n: delay ${d.render}").orDie
            }
 
       // || demo
       orOut <- boundedExp.run(now, List.fill(4)(()))
-      _ <- Console.printLine(s"[||] Union first 4 outputs (expDelay, spacedIdx):").orDie
+      _     <- Console.printLine(s"[||] Union first 4 outputs (expDelay, spacedIdx):").orDie
       _ <- ZIO.foreach(orOut) { case (d, n) =>
              Console.printLine(s"  step $n: delay ${d.render}").orDie
            }
 
       // ++ demo
       seqOut <- twoFastThenThreeSlow.run(now, 1 to 10)
-      _ <- Console.printLine(
-             s"[++] Outputs from recurs(2) ++ recurs(3): $seqOut"
-           ).orDie
+      _ <- Console
+             .printLine(
+               s"[++] Outputs from recurs(2) ++ recurs(3): $seqOut"
+             )
+             .orDie
     } yield ()
 
   Unsafe.unsafe { implicit u =>

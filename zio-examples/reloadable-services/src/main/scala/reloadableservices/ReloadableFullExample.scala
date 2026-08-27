@@ -18,19 +18,20 @@ package reloadableservices
 
 import zio._
 
-/** Tutorial: Hot-Swapping Services with Reloadable
-  *
-  * Concept: Putting It All Together — all reload strategies in one program
-  *
-  * A complete example combining `Reloadable.manual`, `Reloadable.reload`
-  * (blocking hot-swap), and `Reloadable.reloadFork` (background hot-swap),
-  * making three full acquire/release cycles visible in the console.
-  *
-  * Run:
-  * {{{
-  *   sbt "examplesJVM/runMain zio.examples.ReloadableFullExample"
-  * }}}
-  */
+/**
+ * Tutorial: Hot-Swapping Services with Reloadable
+ *
+ * Concept: Putting It All Together — all reload strategies in one program
+ *
+ * A complete example combining `Reloadable.manual`, `Reloadable.reload`
+ * (blocking hot-swap), and `Reloadable.reloadFork` (background hot-swap),
+ * making three full acquire/release cycles visible in the console.
+ *
+ * Run:
+ * {{{
+ *   sbt "examplesJVM/runMain zio.examples.ReloadableFullExample"
+ * }}}
+ */
 object ReloadableFullExample extends ZIOAppDefault {
 
   // ── Service definition ────────────────────────────────────────────────────
@@ -65,7 +66,7 @@ object ReloadableFullExample extends ZIOAppDefault {
       _  <- ZIO.debug(s"Initial count: $v1") // 2
 
       // 2. Blocking atomic hot-swap — old finalizers run, new instance built.
-      _  <- Reloadable.reload[Counter]
+      _ <- Reloadable.reload[Counter]
 
       // 3. Fresh instance starts at 0; increment once.
       c2 <- Reloadable.get[Counter]
@@ -74,8 +75,8 @@ object ReloadableFullExample extends ZIOAppDefault {
       _  <- ZIO.debug(s"After manual reload: $v2") // 1
 
       // 4. Fork a non-blocking background reload; main fiber continues.
-      _  <- Reloadable.reloadFork[Counter]
-      _  <- ZIO.sleep(50.millis) // give the daemon fiber time to finish
+      _ <- Reloadable.reloadFork[Counter]
+      _ <- ZIO.sleep(50.millis) // give the daemon fiber time to finish
 
       // 5. Another fresh instance — count is back to 0.
       c3 <- Reloadable.get[Counter]

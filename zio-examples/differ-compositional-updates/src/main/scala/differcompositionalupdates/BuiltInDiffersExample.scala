@@ -2,12 +2,13 @@ package differcompositionalupdates
 
 import zio._
 
-/** Title: Built-in Differs — set, map, chunk, and update
-  * Description: Shows how to wire Differ.set, Differ.map, and Differ.chunk into
-  * FiberRef.makePatch and observe that concurrent fiber additions are always merged,
-  * not overwritten.
-  * Run: sbt "differ-compositional-updates/runMain differcompositionalupdates.BuiltInDiffersExample"
-  */
+/**
+ * Title: Built-in Differs — set, map, chunk, and update Description: Shows how
+ * to wire Differ.set, Differ.map, and Differ.chunk into FiberRef.makePatch and
+ * observe that concurrent fiber additions are always merged, not overwritten.
+ * Run: sbt "differ-compositional-updates/runMain
+ * differcompositionalupdates.BuiltInDiffersExample"
+ */
 object BuiltInDiffersExample extends ZIOAppDefault {
 
   // ===== Differ.set — membership merging =====
@@ -21,7 +22,7 @@ object BuiltInDiffersExample extends ZIOAppDefault {
       _      <- left.join
       _      <- right.join
       result <- ref.get
-      _      <- Console.printLine(s"Set result: $result").orDie  // Set(left, right)
+      _      <- Console.printLine(s"Set result: $result").orDie // Set(left, right)
     } yield ()
   }
 
@@ -37,7 +38,7 @@ object BuiltInDiffersExample extends ZIOAppDefault {
       _      <- left.join
       _      <- right.join
       result <- ref.get
-      _      <- Console.printLine(s"Map result: $result").orDie  // Map(a -> 1, b -> 2)
+      _      <- Console.printLine(s"Map result: $result").orDie // Map(a -> 1, b -> 2)
     } yield ()
   }
 
@@ -53,7 +54,7 @@ object BuiltInDiffersExample extends ZIOAppDefault {
       _      <- left.join
       _      <- right.join
       result <- ref.get
-      _      <- Console.printLine(s"Chunk result: $result").orDie  // Chunk(alpha, beta) or Chunk(beta, alpha)
+      _      <- Console.printLine(s"Chunk result: $result").orDie // Chunk(alpha, beta) or Chunk(beta, alpha)
     } yield ()
   }
 
