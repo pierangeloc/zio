@@ -1,6 +1,6 @@
 //> using scala 3.8.4
-//> using dep dev.zio::zio:2.1.26
-//> using dep dev.zio::zio-streams:2.1.26
+//> using dep dev.zio::zio:2.1.27
+//> using dep dev.zio::zio-streams:2.1.27
 
 // Compile check for the homepage CodeShowcase snippets
 // (website/src/components/sections/CodeShowcase/data.js).
